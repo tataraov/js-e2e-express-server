@@ -35,7 +35,7 @@ steps:
     artifactoryService: 'ArtifactoryCloud'
     sourceRepo: 'san-npm'
     workingFolder: '$(System.DefaultWorkingDirectory)'
-    collectBuildInfo: true
+    collectBuildInfo: false
     threads: '1'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'

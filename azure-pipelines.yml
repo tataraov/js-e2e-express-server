@@ -45,7 +45,7 @@ steps:
     command: 'install'
     artifactoryService: 'ArtifactoryCloud'
     sourceRepo: 'san-npm'
-    workingFolder: '$(System.DefaultWorkingDirectory)'
+    workingFolder: '/'
     arguments: '--prefer-offline --audit=false --no-audit --prefix $(System.DefaultWorkingDirectory)'
     collectBuildInfo: true
     threads: '1'

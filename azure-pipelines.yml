@@ -15,10 +15,44 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+- bash: |
+        echo "Work Directory@@@@@@@@@@@@@@@@@@"
+        echo $(System.DefaultWorkingDirectory)  
+        set -e
+        node --version
+        npm --version
+        echo "npm cache location"
+        npm config get cache
+        echo "cleaning up workspace"
+        rm -rf .angular
+        rm -rf build
+        rm -rf dist 
+  #ToDo:Upload result of lint to sonarqube. (Use several rules in config file).
+  displayName: 'Cleanup NPM Cache & Workspace'
+- task: ArtifactoryNpm@2
+  inputs:
+    command: 'ci'
+    artifactoryService: 'ArtifactoryCloud'
+    sourceRepo: 'san-npm'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    collectBuildInfo: true
+    threads: '1'
+    buildName: '$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
+    includeEnvVars: true
+- task: ArtifactoryNpm@2
+  inputs:
+    command: 'install'
+    artifactoryService: 'ArtifactoryCloud'
+    sourceRepo: 'san-npm'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: '--prefer-offline --audit=false --no-audit --prefix $(System.DefaultWorkingDirectory)'
+    collectBuildInfo: true
+    threads: '1'
+    buildName: '$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
+    includeEnvVars: true
+
 - task: CopyFiles@2
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)'
@@ -33,8 +67,12 @@ steps:
     targetFolder: $(Build.ArtifactStagingDirectory)/npm
   displayName: 'Copy package.json'   
 
-- task: PublishPipelineArtifact@1
+- task: ArtifactoryNpm@2
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/npm'
-    artifactName: npm
-  displayName: 'Publish npm artifact'
+    command: 'pack and publish'
+    artifactoryService: 'ArtifactoryCloud'
+    targetRepo: 'san-npm'
+    collectBuildInfo: true
+    buildName: '$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
+    includeEnvVars: true

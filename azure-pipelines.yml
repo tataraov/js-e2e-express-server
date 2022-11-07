@@ -40,18 +40,6 @@ steps:
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
     includeEnvVars: true
-- task: ArtifactoryNpm@2
-  inputs:
-    command: 'install'
-    artifactoryService: 'ArtifactoryCloud'
-    sourceRepo: 'san-npm'
-    workingFolder: '/'
-    arguments: '--prefer-offline --audit=false --no-audit --prefix $(System.DefaultWorkingDirectory)'
-    collectBuildInfo: true
-    threads: '1'
-    buildName: '$(Build.DefinitionName)'
-    buildNumber: '$(Build.BuildNumber)'
-    includeEnvVars: true
 
 - task: CopyFiles@2
   inputs:

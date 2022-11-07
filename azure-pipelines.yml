@@ -39,7 +39,7 @@ steps:
     threads: '1'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
-    includeEnvVars: true
+    includeEnvVars: false
 
 - task: CopyFiles@2
   inputs:

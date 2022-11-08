@@ -29,62 +29,47 @@ steps:
         rm -rf dist 
   #ToDo:Upload result of lint to sonarqube. (Use several rules in config file).
   displayName: 'Cleanup NPM Cache & Workspace'
-- task: ArtifactoryNpm@2
+- task: JFrogNpm@1
   inputs:
-    continueOnError: false
     command: 'ci'
-    artifactoryService: 'ArtifactoryCloud'
+    artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
     workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: '-g --prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
     collectBuildInfo: true
     threads: '1'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
     includeEnvVars: true
-- task: ArtifactoryNpm@2
+- task: JFrogNpm@1
   inputs:
     command: 'install'
-    artifactoryService: 'ArtifactoryCloud'
+    artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
     workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: '$(System.DefaultWorkingDirectory)'
     collectBuildInfo: true
     threads: '1'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
     includeEnvVars: true
 
-- task: CopyFiles@2
-  inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: '*.tgz' 
-    targetFolder: $(Build.ArtifactStagingDirectory)/npm
-  displayName: 'Copy npm package'
+#- task: CopyFiles@2
+#  inputs:
+#    sourceFolder: '$(Build.SourcesDirectory)'
+#    contents: '*.tgz' 
+#    targetFolder: $(Build.ArtifactStagingDirectory)/npm
+#  displayName: 'Copy npm package'
 
-- task: CopyFiles@2
-  inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: 'package.json' 
-    targetFolder: $(Build.ArtifactStagingDirectory)/npm
-  displayName: 'Copy package.json'   
+#- task: CopyFiles@2
+#  inputs:
+#    sourceFolder: '$(Build.SourcesDirectory)'
+#    contents: 'package.json' 
+#    targetFolder: $(Build.ArtifactStagingDirectory)/npm
+#  displayName: 'Copy package.json'   
 
-- task: ArtifactoryNpm@2
+- task: JFrogPublishBuildInfo@1
   inputs:
-    command: 'pack and publish'
-    artifactoryService: 'ArtifactoryCloud'
-    targetRepo: 'san-npm'
-    collectBuildInfo: true
+    artifactoryConnection: 'TataSaaS'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
-    includeEnvVars: true
-- task: ArtifactoryPublishBuildInfo@1
-  inputs:
-    artifactoryService: 'ArtifactoryCloud'
-    buildName: '$(Build.DefinitionName)'
-    buildNumber: '$(Build.BuildNumber)'
-- task: ArtifactoryXrayScan@1
-  inputs:
-    artifactoryService: 'ArtifactoryCloud'
-    buildName: '$(Build.DefinitionName)'
-    buildNumber: '$(Build.BuildNumber)'
-    allowFailBuild: false
+

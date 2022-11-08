@@ -38,14 +38,14 @@ steps:
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)'
     contents: '*.tgz' 
-    targetFolder: $(Build.ArtifactStagingDirectory)/npm
+    targetFolder: $(System.DefaultWorkingDirectory)/npm
   displayName: 'Copy npm package'
 
 - task: CopyFiles@2
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)'
     contents: 'package.json' 
-    targetFolder: $(Build.ArtifactStagingDirectory)/npm
+    targetFolder: $(System.DefaultWorkingDirectory)/npm
   displayName: 'Copy package.json'   
 - task: JFrogNpm@1
   inputs:

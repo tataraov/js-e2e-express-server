@@ -18,6 +18,10 @@ steps:
 - bash: |
         echo "Work Directory@@@@@@@@@@@@@@@@@@"
         echo $(System.DefaultWorkingDirectory) 
+        echo "Build Source Directory @@@@@@@@@"
+        echo $(Build.SourcesDirectory)
+        echo "Artifact staging Directory @@@@@@@@@"
+        echo $(Build.ArtifactStagingDirectory)
         set -e
         node --version
         npm --version

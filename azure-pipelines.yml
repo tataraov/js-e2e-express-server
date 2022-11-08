@@ -34,7 +34,7 @@ steps:
     command: 'ci'
     artifactoryService: 'ArtifactoryCloud'
     sourceRepo: 'san-npm'
-    workingFolder: '$(System.DefaultWorkingDirectory)'
+    #workingFolder: '$(System.DefaultWorkingDirectory)'
     collectBuildInfo: true
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'

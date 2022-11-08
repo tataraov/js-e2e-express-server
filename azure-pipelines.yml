@@ -35,11 +35,11 @@ steps:
     artifactoryService: 'ArtifactoryCloud'
     sourceRepo: 'san-npm'
     workingFolder: '$(System.DefaultWorkingDirectory)'
-    collectBuildInfo: false
+    collectBuildInfo: true
     threads: '1'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
-    includeEnvVars: false
+    includeEnvVars: true
 
 - task: CopyFiles@2
   inputs:

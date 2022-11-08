@@ -31,6 +31,17 @@ steps:
   displayName: 'Cleanup NPM Cache & Workspace'
 - task: ArtifactoryNpm@2
   inputs:
+    command: 'ci'
+    artifactoryService: 'ArtifactoryCloud'
+    sourceRepo: 'san-npm'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    collectBuildInfo: true
+    threads: '1'
+    buildName: '$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
+    includeEnvVars: true
+- task: ArtifactoryNpm@2
+  inputs:
     command: 'install'
     artifactoryService: 'ArtifactoryCloud'
     sourceRepo: 'san-npm'
@@ -69,3 +80,9 @@ steps:
     artifactoryService: 'ArtifactoryCloud'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
+- task: ArtifactoryXrayScan@1
+  inputs:
+    artifactoryService: 'ArtifactoryCloud'
+    buildName: '$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
+    allowFailBuild: false

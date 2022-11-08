@@ -36,7 +36,6 @@ steps:
     sourceRepo: 'san-npm'
     workingFolder: '$(System.DefaultWorkingDirectory)'
     collectBuildInfo: true
-    threads: '1'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
     includeEnvVars: true

@@ -33,6 +33,20 @@ steps:
         rm -rf dist 
   #ToDo:Upload result of lint to sonarqube. (Use several rules in config file).
   displayName: 'Cleanup NPM Cache & Workspace'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: '*.tgz' 
+    targetFolder: $(Build.ArtifactStagingDirectory)/npm
+  displayName: 'Copy npm package'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'package.json' 
+    targetFolder: $(Build.ArtifactStagingDirectory)/npm
+  displayName: 'Copy package.json'   
 - task: JFrogNpm@1
   inputs:
     command: 'ci'
@@ -57,21 +71,6 @@ steps:
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
     includeEnvVars: true
-
-#- task: CopyFiles@2
-#  inputs:
-#    sourceFolder: '$(Build.SourcesDirectory)'
-#    contents: '*.tgz' 
-#    targetFolder: $(Build.ArtifactStagingDirectory)/npm
-#  displayName: 'Copy npm package'
-
-#- task: CopyFiles@2
-#  inputs:
-#    sourceFolder: '$(Build.SourcesDirectory)'
-#    contents: 'package.json' 
-#    targetFolder: $(Build.ArtifactStagingDirectory)/npm
-#  displayName: 'Copy package.json'   
-
 - task: JFrogPublishBuildInfo@1
   inputs:
     artifactoryConnection: 'TataSaaS'

@@ -31,11 +31,14 @@ steps:
   displayName: 'Cleanup NPM Cache & Workspace'
 - task: ArtifactoryNpm@2
   inputs:
+    continueOnError: false
     command: 'ci'
     artifactoryService: 'ArtifactoryCloud'
     sourceRepo: 'san-npm'
-    #workingFolder: '$(System.DefaultWorkingDirectory)'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: '-g --prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
     collectBuildInfo: true
+    threads: '1'
     buildName: '$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
     includeEnvVars: true

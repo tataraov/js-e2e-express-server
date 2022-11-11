@@ -36,19 +36,6 @@ steps:
 
 - task: JFrogNpm@1
   inputs:
-    command: 'ci'
-    artifactoryConnection: 'TataSaaS'
-    sourceRepo: 'san-npm'
-    #workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: ''
-    collectBuildInfo: true
-    threads: '1'
-    buildName: '$(Build.DefinitionName)'
-    buildNumber: '$(Build.BuildNumber)'
-    includeEnvVars: true
-
-- task: JFrogNpm@1
-  inputs:
     command: 'install'
     artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'

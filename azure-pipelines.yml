@@ -39,8 +39,8 @@ steps:
     command: 'ci'
     artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
-    workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: '$(System.DefaultWorkingDirectory)'
+    #workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: ''
     collectBuildInfo: true
     threads: '1'
     buildName: '$(Build.DefinitionName)'
@@ -52,8 +52,8 @@ steps:
     command: 'install'
     artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
-    workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: '$(System.DefaultWorkingDirectory)'
+    #workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: ''
     collectBuildInfo: true
     threads: '1'
     buildName: '$(Build.DefinitionName)'

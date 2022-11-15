@@ -33,7 +33,16 @@ steps:
         rm -rf dist 
   #ToDo:Upload result of lint to sonarqube. (Use several rules in config file).
   displayName: 'Cleanup NPM Cache & Workspace'
-
+- task: JFrogNpm@1
+  inputs:
+    command: 'install'
+    artifactoryConnection: 'TataSaaS'
+    sourceRepo: 'san-npm'
+    collectBuildInfo: true
+    threads: '1'
+    buildName: '$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
+    includeEnvVars: true
 - task: JFrogNpm@1
   inputs:
     command: 'ci'

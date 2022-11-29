@@ -10,8 +10,6 @@ pool:
   vmImage: ubuntu-latest
 
 parameters:
-  - name: subProject
-    type: string
   - name: angularCliVersion
     type: string
   - name: cleanBuild
@@ -84,20 +82,6 @@ steps:
     artifactoryConnection: 'TataSaaS'
     buildName: 'digital-npm-$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
-
-- bash: |
-        set -e
-        subProject=""
-        if [[ "${{ parameters.subProject }}" != "" ]]; then
-          subProject=":${{ parameters.subProject }}"
-        fi
-        echo "Running npm lint:"
-        npm run lint$subProject
-        echo "Running npm build:"
-        npm run build$subProject
-        echo "Running npm test:"
-        npm run test$subProject    
-  displayName: 'NPM Lint,Build & Test'
   
 - task: JFrogBuildScan@1
   name: xrayScan

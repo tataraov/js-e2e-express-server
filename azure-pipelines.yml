@@ -9,19 +9,17 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+parameters:
+  - name: subProject
+    type: string
+  - name: angularCliVersion
+    type: string
+  - name: cleanBuild
+    type: boolean
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
-
 - bash: |
         echo "Work Directory@@@@@@@@@@@@@@@@@@"
-        echo $(System.DefaultWorkingDirectory) 
-        echo "Build Source Directory @@@@@@@@@"
-        echo $(Build.SourcesDirectory)
-        echo "Artifact staging Directory @@@@@@@@@"
-        echo $(Build.ArtifactStagingDirectory)
+        echo $(System.DefaultWorkingDirectory)  
         set -e
         node --version
         npm --version
@@ -33,38 +31,81 @@ steps:
         rm -rf dist 
   #ToDo:Upload result of lint to sonarqube. (Use several rules in config file).
   displayName: 'Cleanup NPM Cache & Workspace'
+
 - task: JFrogNpm@1
-  inputs:
-    command: 'install'
-    artifactoryConnection: 'TataSaaS'
-    sourceRepo: 'san-npm'
-    collectBuildInfo: true
-    threads: '1'
-    buildName: '$(Build.DefinitionName)'
-    buildNumber: '$(Build.BuildNumber)'
-    includeEnvVars: true
-- task: JFrogNpm@1
+  displayName: 'JFrog AngularCli Install'
   inputs:
     command: 'ci'
     artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
     #workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: ''
+    arguments: '-g --prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
+    collectBuildInfo: false
+    threads: '1'
+    buildName: 'digital-npm-$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'    
+    includeEnvVars: false
+
+- task: JFrogNpm@1
+  condition: eq('${{ parameters.cleanBuild }}', 'True')
+  displayName: 'JFrog NPM Clean Install'
+  inputs:
+    command: 'ci'
+    artifactoryConnection: 'TataSaaS'
+    sourceRepo: 'san-npm'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: '--prefer-offline --audit=false --no-audit'
     collectBuildInfo: true
     threads: '1'
-    buildName: '$(Build.DefinitionName)'
-    buildNumber: '$(Build.BuildNumber)'
+    buildName: 'digital-npm-$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'   
     includeEnvVars: true
+
+- task: JFrogNpm@1
+  condition: ne('${{ parameters.cleanBuild }}', 'True')
+  displayName: 'JFrog NPM Install'
+  inputs:
+    command: 'install'
+    artifactoryConnection: 'TataSaaS'
+    sourceRepo: 'san-npm'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: '--prefer-offline --audit=false --no-audit'
+    collectBuildInfo: true
+    threads: '1'
+    buildName: 'digital-npm-$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'    
+    includeEnvVars: true
+
 - task: JFrogPublishBuildInfo@1
+  name: publishBInfo
+  displayName: 'JFrog Publish Build Info'
+  condition: succeeded()
   inputs:
     artifactoryConnection: 'TataSaaS'
-    buildName: '$(Build.DefinitionName)'
+    buildName: 'digital-npm-$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
 
+- bash: |
+        set -e
+        subProject=""
+        if [[ "${{ parameters.subProject }}" != "" ]]; then
+          subProject=":${{ parameters.subProject }}"
+        fi
+        echo "Running npm lint:"
+        npm run lint$subProject
+        echo "Running npm build:"
+        npm run build$subProject
+        echo "Running npm test:"
+        npm run test$subProject    
+  displayName: 'NPM Lint,Build & Test'
+  
 - task: JFrogBuildScan@1
+  name: xrayScan
+  displayName: 'XRay Scan'
+  condition: succeeded()
   inputs:
     xrayConnection: 'TataXraySaaS'
-    buildName: '$(Build.DefinitionName)'
-    buildNumber: '$(Build.BuildNumber)'
-    allowFailBuild: true
+    buildName: 'digital-npm-$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'    
+    allowFailBuild: false
     vuln: true

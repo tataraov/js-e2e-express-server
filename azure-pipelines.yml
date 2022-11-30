@@ -57,6 +57,20 @@ steps:
     buildNumber: '$(Build.BuildNumber)'    
     includeEnvVars: false
 
+- task: JFrogNpm@1
+  displayName: 'JFrog NPM Clean Install'
+  inputs:
+    command: 'ci'
+    artifactoryConnection: 'TataSaaS'
+    sourceRepo: 'san-npm'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    arguments: '--prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
+    collectBuildInfo: true
+    threads: '1'
+    buildName: 'digital-npm-$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'    
+    includeEnvVars: true
+
 - task: JFrogPublishBuildInfo@1
   name: publishBInfo
   displayName: 'JFrog Publish Build Info'

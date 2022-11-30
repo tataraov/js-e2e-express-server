@@ -36,7 +36,7 @@ steps:
     artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
     workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: '-g --prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
+    #arguments: '-g --prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
     collectBuildInfo: true
     threads: '1'
     buildName: '$(Build.DefinitionName)'
@@ -49,8 +49,8 @@ steps:
     command: 'ci'
     artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
-    #workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: '-g --prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
+    workingFolder: '$(System.DefaultWorkingDirectory)'
+    #arguments: '-g --prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
     collectBuildInfo: false
     threads: '1'
     buildName: 'digital-npm-$(Build.DefinitionName)'

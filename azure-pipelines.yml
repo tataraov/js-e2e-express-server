@@ -50,7 +50,7 @@ steps:
     artifactoryConnection: 'TataSaaS'
     sourceRepo: 'san-npm'
     workingFolder: '$(System.DefaultWorkingDirectory)'
-    arguments: '--prefer-offline --audit=false --no-audit'
+    arguments: '--prefer-offline --audit=false --no-audit @angular/cli@${{ parameters.angularCliVersion }}'
     collectBuildInfo: false
     threads: '1'
     buildName: 'digital-npm-$(Build.DefinitionName)'

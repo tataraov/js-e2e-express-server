@@ -39,7 +39,7 @@ steps:
     arguments: '--prefer-offline --audit=false --no-audit'
     collectBuildInfo: true
     threads: '1'
-    buildName: '$(Build.DefinitionName)'
+    buildName: 'digital-npm-$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'
     includeEnvVars: true
 
@@ -56,3 +56,12 @@ steps:
     buildName: 'digital-npm-$(Build.DefinitionName)'
     buildNumber: '$(Build.BuildNumber)'    
     includeEnvVars: false
+
+- task: JFrogPublishBuildInfo@1
+  name: publishBInfo
+  displayName: 'JFrog Publish Build Info'
+  condition: succeeded()
+  inputs:
+    artifactoryConnection: 'TataSaaS'
+    buildName: 'digital-npm-$(Build.DefinitionName)'
+    buildNumber: '$(Build.BuildNumber)'
